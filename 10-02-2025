@@ -1,0 +1,420 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "3f0a2808-cb47-44ef-a7b2-8c3daa82a595",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting PyPDF2\n",
+      "  Downloading pypdf2-3.0.1-py3-none-any.whl.metadata (6.8 kB)\n",
+      "Downloading pypdf2-3.0.1-py3-none-any.whl (232 kB)\n",
+      "Installing collected packages: PyPDF2\n",
+      "Successfully installed PyPDF2-3.0.1\n",
+      "Note: you may need to restart the kernel to use updated packages.\n"
+     ]
+    }
+   ],
+   "source": [
+    "pip install PyPDF2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "a06631d9-72a6-4050-992b-f722c6c8d1e2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import PyPDF2\n",
+    "from PyPDF2 import PdfFileReader"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "d3977d78-3ff0-4ec5-9517-dfd84ba4462d",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'3.0.1'"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "PyPDF2.__version__"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "67b77cdf-0871-4063-be2c-efae4c16ed65",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Number of pages: 35\n",
+      " \n",
+      " \n",
+      " Development  Plan for Greater Mumbai 2014‐2034                                                                                                                                                                                                                                                      \n",
+      "Acknowledgements  \n",
+      "The Consultant  wishes to thank the following  individuals  from the Municipal  Corporation  of \n",
+      "Greater Mumbai for their invaluable  support, insights and contributions  towards ‘Working  Paper 1 \n",
+      "– Preparation  of Base Map’ for the preparation  of the Development  Plan for Greater Mumbai \n",
+      "2014‐34. \n",
+      " Mr. Subodh Kumar, IAS, Municipal  Commissioner;  \n",
+      " Mr. Rajeev Kuknoor, Chief Engineer Development  Plan; \n",
+      " Mr. Sudhir Ghate, Deputy Chief Engineer Development  Plan; \n",
+      " Mr. A.G. Marathe, Deputy Chief Engineer Development  Plan; \n",
+      " Mr. R. Balachandran,  Executive  Engineer and Town Planning Officer, Development  Plan. \n",
+      " Our gratitude  to the following  experts for their invaluable  insights and support: \n",
+      " \n",
+      "Mr. V.K Phatak, Former Chief Town Planner (MMRDA);  \n",
+      " Mr. A.N Kale, Former Chief Engineer, (DP); \n",
+      " Mr. A. S Jain Former Dy. Chief Engineer, (DP). \n",
+      " We wish to especially  thank MCGM officers, Mr. Jagdish Talreja, Mr. Dinesh Naik, Mr. Hiren \n",
+      "Daftardar,  Ms. Anita Naik for their continual  support since the\n",
+      " beginning  of the project and their \n",
+      "help towards familiarization  and data collection.  They have been instrumental  in helping to \n",
+      "contact various MCGM departments  as well as in helping to establish contact with personnel  from \n",
+      "other government  departments  and organizations.  Many thanks for the MCGM team, for \n",
+      "deploying  personnel,  particularly  Mr. Prasad Gharat, on extensive  field visits that have helped in \n",
+      "understanding  actual ground conditions.  \n",
+      " \n",
+      "We apologize  if we have inadvertently  omitted anyone to whom acknowledgement  is due. We hope \n",
+      "and anticipate  the work's usefulness  for the intended purpose. \n",
+      " \n"
+     ]
+    }
+   ],
+   "source": [
+    "pdf = open(r\"C:\\Users\\91800\\Downloads\\file1pdf.pdf\",\"rb\")\n",
+    "pdf_reader = PyPDF2.PdfReader(pdf)\n",
+    "print(\"Number of pages:\",len(pdf_reader.pages))\n",
+    "page = pdf_reader.pages[1]\n",
+    "print(page.extract_text())\n",
+    "pdf.close()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "a5add64a-22e9-4960-bec4-b46ae633a469",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import PyPDF2, urllib , nltk\n",
+    "from io import BytesIO\n",
+    "from nltk.tokenize import word_tokenize\n",
+    "from nltk.corpus import stopwords"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "df0a6a66-c760-4924-8f2a-3ef9c508db26",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "wFile = urllib.request.urlopen('http://www.udri.org/pdf/02%20working%20paper%201.pdf')\n",
+    "pdfreader = PyPDF2.PdfReader(BytesIO(wFile.read()))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "f18ab5e0-08ed-48bc-8734-29f17454acdd",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "LookupError",
+     "evalue": "\n**********************************************************************\n  Resource \u001b[93mpunkt_tab\u001b[0m not found.\n  Please use the NLTK Downloader to obtain the resource:\n\n  \u001b[31m>>> import nltk\n  >>> nltk.download('punkt_tab')\n  \u001b[0m\n  For more information see: https://www.nltk.org/data.html\n\n  Attempted to load \u001b[93mtokenizers/punkt_tab/english/\u001b[0m\n\n  Searched in:\n    - 'C:\\\\Users\\\\91800/nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\anaconda3\\\\nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\anaconda3\\\\share\\\\nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\anaconda3\\\\lib\\\\nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\AppData\\\\Roaming\\\\nltk_data'\n    - 'C:\\\\nltk_data'\n    - 'D:\\\\nltk_data'\n    - 'E:\\\\nltk_data'\n**********************************************************************\n",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mLookupError\u001b[0m                               Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[10], line 4\u001b[0m\n\u001b[0;32m      2\u001b[0m page2 \u001b[38;5;241m=\u001b[39m pageObj\u001b[38;5;241m.\u001b[39mextract_text()\n\u001b[0;32m      3\u001b[0m punctuation \u001b[38;5;241m=\u001b[39m [\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m(\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m)\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m;\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m:\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m[\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m]\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m,\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m...\u001b[39m\u001b[38;5;124m'\u001b[39m,\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m.\u001b[39m\u001b[38;5;124m'\u001b[39m]\n\u001b[1;32m----> 4\u001b[0m tokens \u001b[38;5;241m=\u001b[39m word_tokenize(page2)\n\u001b[0;32m      5\u001b[0m stop_words \u001b[38;5;241m=\u001b[39m stopwords\u001b[38;5;241m.\u001b[39mwords(\u001b[38;5;124m'\u001b[39m\u001b[38;5;124menglish\u001b[39m\u001b[38;5;124m'\u001b[39m)\n\u001b[0;32m      6\u001b[0m keywords \u001b[38;5;241m=\u001b[39m [word \u001b[38;5;28;01mfor\u001b[39;00m word \u001b[38;5;129;01min\u001b[39;00m tokens \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m word \u001b[38;5;129;01min\u001b[39;00m stop_words \u001b[38;5;129;01mand\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m word \u001b[38;5;129;01min\u001b[39;00m punctuations]\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\nltk\\tokenize\\__init__.py:142\u001b[0m, in \u001b[0;36mword_tokenize\u001b[1;34m(text, language, preserve_line)\u001b[0m\n\u001b[0;32m    127\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21mword_tokenize\u001b[39m(text, language\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124menglish\u001b[39m\u001b[38;5;124m\"\u001b[39m, preserve_line\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mFalse\u001b[39;00m):\n\u001b[0;32m    128\u001b[0m \u001b[38;5;250m    \u001b[39m\u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m    129\u001b[0m \u001b[38;5;124;03m    Return a tokenized copy of *text*,\u001b[39;00m\n\u001b[0;32m    130\u001b[0m \u001b[38;5;124;03m    using NLTK's recommended word tokenizer\u001b[39;00m\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m    140\u001b[0m \u001b[38;5;124;03m    :type preserve_line: bool\u001b[39;00m\n\u001b[0;32m    141\u001b[0m \u001b[38;5;124;03m    \"\"\"\u001b[39;00m\n\u001b[1;32m--> 142\u001b[0m     sentences \u001b[38;5;241m=\u001b[39m [text] \u001b[38;5;28;01mif\u001b[39;00m preserve_line \u001b[38;5;28;01melse\u001b[39;00m sent_tokenize(text, language)\n\u001b[0;32m    143\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m [\n\u001b[0;32m    144\u001b[0m         token \u001b[38;5;28;01mfor\u001b[39;00m sent \u001b[38;5;129;01min\u001b[39;00m sentences \u001b[38;5;28;01mfor\u001b[39;00m token \u001b[38;5;129;01min\u001b[39;00m _treebank_word_tokenizer\u001b[38;5;241m.\u001b[39mtokenize(sent)\n\u001b[0;32m    145\u001b[0m     ]\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\nltk\\tokenize\\__init__.py:119\u001b[0m, in \u001b[0;36msent_tokenize\u001b[1;34m(text, language)\u001b[0m\n\u001b[0;32m    109\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21msent_tokenize\u001b[39m(text, language\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124menglish\u001b[39m\u001b[38;5;124m\"\u001b[39m):\n\u001b[0;32m    110\u001b[0m \u001b[38;5;250m    \u001b[39m\u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m    111\u001b[0m \u001b[38;5;124;03m    Return a sentence-tokenized copy of *text*,\u001b[39;00m\n\u001b[0;32m    112\u001b[0m \u001b[38;5;124;03m    using NLTK's recommended sentence tokenizer\u001b[39;00m\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m    117\u001b[0m \u001b[38;5;124;03m    :param language: the model name in the Punkt corpus\u001b[39;00m\n\u001b[0;32m    118\u001b[0m \u001b[38;5;124;03m    \"\"\"\u001b[39;00m\n\u001b[1;32m--> 119\u001b[0m     tokenizer \u001b[38;5;241m=\u001b[39m _get_punkt_tokenizer(language)\n\u001b[0;32m    120\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m tokenizer\u001b[38;5;241m.\u001b[39mtokenize(text)\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\nltk\\tokenize\\__init__.py:105\u001b[0m, in \u001b[0;36m_get_punkt_tokenizer\u001b[1;34m(language)\u001b[0m\n\u001b[0;32m     96\u001b[0m \u001b[38;5;129m@functools\u001b[39m\u001b[38;5;241m.\u001b[39mlru_cache\n\u001b[0;32m     97\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21m_get_punkt_tokenizer\u001b[39m(language\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124menglish\u001b[39m\u001b[38;5;124m\"\u001b[39m):\n\u001b[0;32m     98\u001b[0m \u001b[38;5;250m    \u001b[39m\u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m     99\u001b[0m \u001b[38;5;124;03m    A constructor for the PunktTokenizer that utilizes\u001b[39;00m\n\u001b[0;32m    100\u001b[0m \u001b[38;5;124;03m    a lru cache for performance.\u001b[39;00m\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m    103\u001b[0m \u001b[38;5;124;03m    :type language: str\u001b[39;00m\n\u001b[0;32m    104\u001b[0m \u001b[38;5;124;03m    \"\"\"\u001b[39;00m\n\u001b[1;32m--> 105\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m PunktTokenizer(language)\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\nltk\\tokenize\\punkt.py:1744\u001b[0m, in \u001b[0;36mPunktTokenizer.__init__\u001b[1;34m(self, lang)\u001b[0m\n\u001b[0;32m   1742\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21m__init__\u001b[39m(\u001b[38;5;28mself\u001b[39m, lang\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124menglish\u001b[39m\u001b[38;5;124m\"\u001b[39m):\n\u001b[0;32m   1743\u001b[0m     PunktSentenceTokenizer\u001b[38;5;241m.\u001b[39m\u001b[38;5;21m__init__\u001b[39m(\u001b[38;5;28mself\u001b[39m)\n\u001b[1;32m-> 1744\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mload_lang(lang)\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\nltk\\tokenize\\punkt.py:1749\u001b[0m, in \u001b[0;36mPunktTokenizer.load_lang\u001b[1;34m(self, lang)\u001b[0m\n\u001b[0;32m   1746\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21mload_lang\u001b[39m(\u001b[38;5;28mself\u001b[39m, lang\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124menglish\u001b[39m\u001b[38;5;124m\"\u001b[39m):\n\u001b[0;32m   1747\u001b[0m     \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnltk\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mdata\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m find\n\u001b[1;32m-> 1749\u001b[0m     lang_dir \u001b[38;5;241m=\u001b[39m find(\u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mtokenizers/punkt_tab/\u001b[39m\u001b[38;5;132;01m{\u001b[39;00mlang\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;124m/\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n\u001b[0;32m   1750\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_params \u001b[38;5;241m=\u001b[39m load_punkt_params(lang_dir)\n\u001b[0;32m   1751\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_lang \u001b[38;5;241m=\u001b[39m lang\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\nltk\\data.py:579\u001b[0m, in \u001b[0;36mfind\u001b[1;34m(resource_name, paths)\u001b[0m\n\u001b[0;32m    577\u001b[0m sep \u001b[38;5;241m=\u001b[39m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m*\u001b[39m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;241m*\u001b[39m \u001b[38;5;241m70\u001b[39m\n\u001b[0;32m    578\u001b[0m resource_not_found \u001b[38;5;241m=\u001b[39m \u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;132;01m{\u001b[39;00msep\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;132;01m{\u001b[39;00mmsg\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;132;01m{\u001b[39;00msep\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;124m\"\u001b[39m\n\u001b[1;32m--> 579\u001b[0m \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mLookupError\u001b[39;00m(resource_not_found)\n",
+      "\u001b[1;31mLookupError\u001b[0m: \n**********************************************************************\n  Resource \u001b[93mpunkt_tab\u001b[0m not found.\n  Please use the NLTK Downloader to obtain the resource:\n\n  \u001b[31m>>> import nltk\n  >>> nltk.download('punkt_tab')\n  \u001b[0m\n  For more information see: https://www.nltk.org/data.html\n\n  Attempted to load \u001b[93mtokenizers/punkt_tab/english/\u001b[0m\n\n  Searched in:\n    - 'C:\\\\Users\\\\91800/nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\anaconda3\\\\nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\anaconda3\\\\share\\\\nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\anaconda3\\\\lib\\\\nltk_data'\n    - 'C:\\\\Users\\\\91800\\\\AppData\\\\Roaming\\\\nltk_data'\n    - 'C:\\\\nltk_data'\n    - 'D:\\\\nltk_data'\n    - 'E:\\\\nltk_data'\n**********************************************************************\n"
+     ]
+    }
+   ],
+   "source": [
+    "pageObj = pdfreader.pages[2]\n",
+    "page2 = pageObj.extract_text()\n",
+    "punctuation = ['(',')',';',':','[',']',',','...','.']\n",
+    "tokens = word_tokenize(page2)\n",
+    "stop_words = stopwords.words('english')\n",
+    "keywords = [word for word in tokens if not word in stop_words and not word in punctuations]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "3e5a7ff2-0487-4786-b473-b3bfb2cca181",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'tokens' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[13], line 3\u001b[0m\n\u001b[0;32m      1\u001b[0m name_list \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mlist\u001b[39m()\n\u001b[0;32m      2\u001b[0m check \u001b[38;5;241m=\u001b[39m [\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mMr.\u001b[39m\u001b[38;5;124m'\u001b[39m, \u001b[38;5;124m'\u001b[39m\u001b[38;5;124mMrs\u001b[39m\u001b[38;5;124m'\u001b[39m, \u001b[38;5;124m'\u001b[39m\u001b[38;5;124mMs.\u001b[39m\u001b[38;5;124m'\u001b[39m]\n\u001b[1;32m----> 3\u001b[0m \u001b[38;5;28;01mfor\u001b[39;00m idx, token \u001b[38;5;129;01min\u001b[39;00m \u001b[38;5;28menumerate\u001b[39m(tokens):\n\u001b[0;32m      4\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m token\u001b[38;5;241m.\u001b[39mstartswith(\u001b[38;5;28mtuple\u001b[39m(check)) \u001b[38;5;129;01mand\u001b[39;00m idx \u001b[38;5;241m<\u001b[39m (\u001b[38;5;28mlen\u001b[39m(tokens)\u001b[38;5;241m-\u001b[39m\u001b[38;5;241m1\u001b[39m):\n\u001b[0;32m      5\u001b[0m         name \u001b[38;5;241m=\u001b[39m token \u001b[38;5;241m+\u001b[39m tokens[idx\u001b[38;5;241m+\u001b[39m\u001b[38;5;241m1\u001b[39m] \u001b[38;5;241m+\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m \u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;241m+\u001b[39m tokens[idx\u001b[38;5;241m+\u001b[39m\u001b[38;5;241m2\u001b[39m]\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'tokens' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "name_list = list()\n",
+    "check = ['Mr.', 'Mrs', 'Ms.']\n",
+    "for idx, token in enumerate(tokens):\n",
+    "    if token.startswith(tuple(check)) and idx < (len(tokens)-1):\n",
+    "        name = token + tokens[idx+1] +' '+ tokens[idx+2]\n",
+    "        name_list.append(name)\n",
+    "print(name_list)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "1c973561-47e6-409b-88d3-4acafda35aa3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "wFile.close()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "4b4648b1-2207-4658-aa8c-f143d96b773b",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting python-docx\n",
+      "  Downloading python_docx-1.1.2-py3-none-any.whl.metadata (2.0 kB)\n",
+      "Requirement already satisfied: lxml>=3.1.0 in c:\\users\\91800\\anaconda3\\lib\\site-packages (from python-docx) (5.2.1)\n",
+      "Requirement already satisfied: typing-extensions>=4.9.0 in c:\\users\\91800\\anaconda3\\lib\\site-packages (from python-docx) (4.11.0)\n",
+      "Downloading python_docx-1.1.2-py3-none-any.whl (244 kB)\n",
+      "Installing collected packages: python-docx\n",
+      "Successfully installed python-docx-1.1.2\n"
+     ]
+    }
+   ],
+   "source": [
+    "!pip install python-docx\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "e5a98154-8e1b-4cf3-8b4f-bc601c58ffd5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import docx"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "d69e1c52-4a5c-47d3-b8cf-e48fa071396a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "doc = open(r\"C:\\Users\\91800\\Downloads\\AT_16.docx\",\"rb\")\n",
+    "document = docx.Document(doc)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "fb9ebf04-9f51-4332-ab71-a72284d62bb4",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "SCHOOL OF ENGINEERINGDEPARTMENT OF AI & ML (IIIrd Year II Semester)                             Application Development- web application with Natural                            Language Processing & IOT Explore (MR22-1CS0264) Date:GUIDE         AD MENTOR         AD COORDINATOR                            DEAN\n"
+     ]
+    }
+   ],
+   "source": [
+    "docu=\"\"\n",
+    "for para in document.paragraphs:\n",
+    "    docu += para.text\n",
+    "print(docu)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "9245ea38-a677-41c6-8cee-baceb22627b5",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The content of the paragraph 0 is :SCHOOL OF ENGINEERING\n",
+      "\n",
+      "The content of the paragraph 1 is :DEPARTMENT OF AI & ML (IIIrd Year II Semester) \n",
+      "\n",
+      "The content of the paragraph 2 is :                            Application Development- web application with Natural\n",
+      "\n",
+      "The content of the paragraph 3 is :                            Language Processing & IOT Explore (MR22-1CS0264) \n",
+      "\n",
+      "The content of the paragraph 4 is :Date:\n",
+      "\n",
+      "The content of the paragraph 5 is :\n",
+      "\n",
+      "The content of the paragraph 6 is :\n",
+      "\n",
+      "The content of the paragraph 7 is :\n",
+      "\n",
+      "The content of the paragraph 8 is :GUIDE         AD MENTOR         AD COORDINATOR                            DEAN\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "for i in range(len(document.paragraphs)):\n",
+    "    print(\"The content of the paragraph \"+ str(i)+\" is :\" + document.paragraphs[i].text+\"\\n\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "7782af1c-c72f-4bf7-9a4b-fa71c5a23f95",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting bs4\n",
+      "  Downloading bs4-0.0.2-py2.py3-none-any.whl.metadata (411 bytes)\n",
+      "Requirement already satisfied: beautifulsoup4 in c:\\users\\91800\\anaconda3\\lib\\site-packages (from bs4) (4.12.3)\n",
+      "Requirement already satisfied: soupsieve>1.2 in c:\\users\\91800\\anaconda3\\lib\\site-packages (from beautifulsoup4->bs4) (2.5)\n",
+      "Downloading bs4-0.0.2-py2.py3-none-any.whl (1.2 kB)\n",
+      "Installing collected packages: bs4\n",
+      "Successfully installed bs4-0.0.2\n"
+     ]
+    }
+   ],
+   "source": [
+    "!pip install bs4"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "88ca039b-1dd3-4c40-8690-b6f9b7318e7d",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ImportError",
+     "evalue": "cannot import name 'Beautiful' from 'bs4' (C:\\Users\\91800\\anaconda3\\Lib\\site-packages\\bs4\\__init__.py)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mImportError\u001b[0m                               Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[26], line 2\u001b[0m\n\u001b[0;32m      1\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01murllib\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mrequest\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m \u001b[38;5;21;01murllib2\u001b[39;00m\n\u001b[1;32m----> 2\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mbs4\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m Beautiful\n",
+      "\u001b[1;31mImportError\u001b[0m: cannot import name 'Beautiful' from 'bs4' (C:\\Users\\91800\\anaconda3\\Lib\\site-packages\\bs4\\__init__.py)"
+     ]
+    }
+   ],
+   "source": [
+    "import urllib.request as urllib2\n",
+    "from bs4 import Beautiful"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "0b8e522c-695e-4d5a-9bdf-3b4f7abff983",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "response = urllib2.urlopen(r\"http://en.wikipedia.org/wiki/Natural_language_processing\")\n",
+    "html_doc = response.read()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "3350a5b6-d249-4e53-abe8-a38b3c54aa42",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'BeautifulSoup' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[29], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m soup \u001b[38;5;241m=\u001b[39m BeautifulSoup(html_doc, \u001b[38;5;124m'\u001b[39m\u001b[38;5;124mhtml.parser\u001b[39m\u001b[38;5;124m'\u001b[39m)\n\u001b[0;32m      2\u001b[0m strhtm \u001b[38;5;241m=\u001b[39m soup\u001b[38;5;241m.\u001b[39mprettify()\n\u001b[0;32m      3\u001b[0m \u001b[38;5;28mprint\u001b[39m(strhtm[:\u001b[38;5;241m5000\u001b[39m])\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'BeautifulSoup' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "soup = BeautifulSoup(html_doc, 'html.parser')\n",
+    "strhtm = soup.prettify()\n",
+    "print(strhtm[:5000])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "65208f95-5d88-455a-ba99-fc3abbfc1e36",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
