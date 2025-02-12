@@ -1,0 +1,507 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "b2f54154-717c-4090-b623-e6eb8f24bdaa",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "87b23cf9-9dd0-4337-8b6d-e936e856925c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>id</th>\n",
+       "      <th>title</th>\n",
+       "      <th>author</th>\n",
+       "      <th>text</th>\n",
+       "      <th>label</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>House Dem Aide: We Didn’t Even See Comey’s Let...</td>\n",
+       "      <td>Darrell Lucus</td>\n",
+       "      <td>House Dem Aide: We Didn’t Even See Comey’s Let...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>FLYNN: Hillary Clinton, Big Woman on Campus - ...</td>\n",
+       "      <td>Daniel J. Flynn</td>\n",
+       "      <td>Ever get the feeling your life circles the rou...</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2</td>\n",
+       "      <td>Why the Truth Might Get You Fired</td>\n",
+       "      <td>Consortiumnews.com</td>\n",
+       "      <td>Why the Truth Might Get You Fired October 29, ...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>3</td>\n",
+       "      <td>15 Civilians Killed In Single US Airstrike Hav...</td>\n",
+       "      <td>Jessica Purkiss</td>\n",
+       "      <td>Videos 15 Civilians Killed In Single US Airstr...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>4</td>\n",
+       "      <td>Iranian woman jailed for fictional unpublished...</td>\n",
+       "      <td>Howard Portnoy</td>\n",
+       "      <td>Print \\nAn Iranian woman has been sentenced to...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   id                                              title              author  \\\n",
+       "0   0  House Dem Aide: We Didn’t Even See Comey’s Let...       Darrell Lucus   \n",
+       "1   1  FLYNN: Hillary Clinton, Big Woman on Campus - ...     Daniel J. Flynn   \n",
+       "2   2                  Why the Truth Might Get You Fired  Consortiumnews.com   \n",
+       "3   3  15 Civilians Killed In Single US Airstrike Hav...     Jessica Purkiss   \n",
+       "4   4  Iranian woman jailed for fictional unpublished...      Howard Portnoy   \n",
+       "\n",
+       "                                                text  label  \n",
+       "0  House Dem Aide: We Didn’t Even See Comey’s Let...      1  \n",
+       "1  Ever get the feeling your life circles the rou...      0  \n",
+       "2  Why the Truth Might Get You Fired October 29, ...      1  \n",
+       "3  Videos 15 Civilians Killed In Single US Airstr...      1  \n",
+       "4  Print \\nAn Iranian woman has been sentenced to...      1  "
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data=pd.read_csv(r\"C:\\Users\\91800\\Downloads\\fake_news.csv\")\n",
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "2779ed67-0074-48ad-ade8-dc53ff5e28b9",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(20800, 5)"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "f22cce45-83ce-48f1-875e-1f47a7e395a0",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 20800 entries, 0 to 20799\n",
+      "Data columns (total 5 columns):\n",
+      " #   Column  Non-Null Count  Dtype \n",
+      "---  ------  --------------  ----- \n",
+      " 0   id      20800 non-null  int64 \n",
+      " 1   title   20242 non-null  object\n",
+      " 2   author  18843 non-null  object\n",
+      " 3   text    20761 non-null  object\n",
+      " 4   label   20800 non-null  int64 \n",
+      "dtypes: int64(2), object(3)\n",
+      "memory usage: 812.6+ KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "data.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "b82f258d-50d4-4b9d-b4ad-0d1aa00dc4ae",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "id           0\n",
+       "title      558\n",
+       "author    1957\n",
+       "text        39\n",
+       "label        0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "4daa9c6a-78c6-41b1-a37a-794c99f78ce6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data=data.drop(['id'],axis=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "ad2dbfaf-344a-4ead-b7d6-67088fa9f2b4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['content']=data['author']+''+data['title']+''+data['text']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "2ed48186-d949-4ec6-80e5-0eef51a26533",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data=data.drop(['title','author','text'],axis=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "f2386bc6-7123-4c21-8b42-94a74e002909",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>label</th>\n",
+       "      <th>content</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Darrell LucusHouse Dem Aide: We Didn’t Even Se...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>0</td>\n",
+       "      <td>Daniel J. FlynnFLYNN: Hillary Clinton, Big Wom...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Consortiumnews.comWhy the Truth Might Get You ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Jessica Purkiss15 Civilians Killed In Single U...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Howard PortnoyIranian woman jailed for fiction...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   label                                            content\n",
+       "0      1  Darrell LucusHouse Dem Aide: We Didn’t Even Se...\n",
+       "1      0  Daniel J. FlynnFLYNN: Hillary Clinton, Big Wom...\n",
+       "2      1  Consortiumnews.comWhy the Truth Might Get You ...\n",
+       "3      1  Jessica Purkiss15 Civilians Killed In Single U...\n",
+       "4      1  Howard PortnoyIranian woman jailed for fiction..."
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "0ab5ebbf-124b-4270-8720-53c478a53cb9",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "AttributeError",
+     "evalue": "'float' object has no attribute 'split'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mAttributeError\u001b[0m                            Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[13], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m] \u001b[38;5;241m=\u001b[39m \u001b[43mdata\u001b[49m\u001b[43m[\u001b[49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[38;5;124;43mcontent\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[43m]\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mapply\u001b[49m\u001b[43m(\u001b[49m\u001b[38;5;28;43;01mlambda\u001b[39;49;00m\u001b[43m \u001b[49m\u001b[43mx\u001b[49m\u001b[43m:\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;124;43m\"\u001b[39;49m\u001b[38;5;124;43m \u001b[39;49m\u001b[38;5;124;43m\"\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mjoin\u001b[49m\u001b[43m(\u001b[49m\u001b[43mx\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mlower\u001b[49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;28;43;01mfor\u001b[39;49;00m\u001b[43m \u001b[49m\u001b[43mx\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;129;43;01min\u001b[39;49;00m\u001b[43m \u001b[49m\u001b[43mx\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43msplit\u001b[49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\u001b[43m)\u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\pandas\\core\\series.py:4924\u001b[0m, in \u001b[0;36mSeries.apply\u001b[1;34m(self, func, convert_dtype, args, by_row, **kwargs)\u001b[0m\n\u001b[0;32m   4789\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21mapply\u001b[39m(\n\u001b[0;32m   4790\u001b[0m     \u001b[38;5;28mself\u001b[39m,\n\u001b[0;32m   4791\u001b[0m     func: AggFuncType,\n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m   4796\u001b[0m     \u001b[38;5;241m*\u001b[39m\u001b[38;5;241m*\u001b[39mkwargs,\n\u001b[0;32m   4797\u001b[0m ) \u001b[38;5;241m-\u001b[39m\u001b[38;5;241m>\u001b[39m DataFrame \u001b[38;5;241m|\u001b[39m Series:\n\u001b[0;32m   4798\u001b[0m \u001b[38;5;250m    \u001b[39m\u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[0;32m   4799\u001b[0m \u001b[38;5;124;03m    Invoke function on values of Series.\u001b[39;00m\n\u001b[0;32m   4800\u001b[0m \n\u001b[1;32m   (...)\u001b[0m\n\u001b[0;32m   4915\u001b[0m \u001b[38;5;124;03m    dtype: float64\u001b[39;00m\n\u001b[0;32m   4916\u001b[0m \u001b[38;5;124;03m    \"\"\"\u001b[39;00m\n\u001b[0;32m   4917\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[43mSeriesApply\u001b[49m\u001b[43m(\u001b[49m\n\u001b[0;32m   4918\u001b[0m \u001b[43m        \u001b[49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[43m,\u001b[49m\n\u001b[0;32m   4919\u001b[0m \u001b[43m        \u001b[49m\u001b[43mfunc\u001b[49m\u001b[43m,\u001b[49m\n\u001b[0;32m   4920\u001b[0m \u001b[43m        \u001b[49m\u001b[43mconvert_dtype\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mconvert_dtype\u001b[49m\u001b[43m,\u001b[49m\n\u001b[0;32m   4921\u001b[0m \u001b[43m        \u001b[49m\u001b[43mby_row\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mby_row\u001b[49m\u001b[43m,\u001b[49m\n\u001b[0;32m   4922\u001b[0m \u001b[43m        \u001b[49m\u001b[43margs\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43margs\u001b[49m\u001b[43m,\u001b[49m\n\u001b[0;32m   4923\u001b[0m \u001b[43m        \u001b[49m\u001b[43mkwargs\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mkwargs\u001b[49m\u001b[43m,\u001b[49m\n\u001b[1;32m-> 4924\u001b[0m \u001b[43m    \u001b[49m\u001b[43m)\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mapply\u001b[49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\pandas\\core\\apply.py:1427\u001b[0m, in \u001b[0;36mSeriesApply.apply\u001b[1;34m(self)\u001b[0m\n\u001b[0;32m   1424\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mapply_compat()\n\u001b[0;32m   1426\u001b[0m \u001b[38;5;66;03m# self.func is Callable\u001b[39;00m\n\u001b[1;32m-> 1427\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mapply_standard\u001b[49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\pandas\\core\\apply.py:1507\u001b[0m, in \u001b[0;36mSeriesApply.apply_standard\u001b[1;34m(self)\u001b[0m\n\u001b[0;32m   1501\u001b[0m \u001b[38;5;66;03m# row-wise access\u001b[39;00m\n\u001b[0;32m   1502\u001b[0m \u001b[38;5;66;03m# apply doesn't have a `na_action` keyword and for backward compat reasons\u001b[39;00m\n\u001b[0;32m   1503\u001b[0m \u001b[38;5;66;03m# we need to give `na_action=\"ignore\"` for categorical data.\u001b[39;00m\n\u001b[0;32m   1504\u001b[0m \u001b[38;5;66;03m# TODO: remove the `na_action=\"ignore\"` when that default has been changed in\u001b[39;00m\n\u001b[0;32m   1505\u001b[0m \u001b[38;5;66;03m#  Categorical (GH51645).\u001b[39;00m\n\u001b[0;32m   1506\u001b[0m action \u001b[38;5;241m=\u001b[39m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mignore\u001b[39m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(obj\u001b[38;5;241m.\u001b[39mdtype, CategoricalDtype) \u001b[38;5;28;01melse\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m\n\u001b[1;32m-> 1507\u001b[0m mapped \u001b[38;5;241m=\u001b[39m \u001b[43mobj\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_map_values\u001b[49m\u001b[43m(\u001b[49m\n\u001b[0;32m   1508\u001b[0m \u001b[43m    \u001b[49m\u001b[43mmapper\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mcurried\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mna_action\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43maction\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mconvert\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mconvert_dtype\u001b[49m\n\u001b[0;32m   1509\u001b[0m \u001b[43m\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m   1511\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28mlen\u001b[39m(mapped) \u001b[38;5;129;01mand\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(mapped[\u001b[38;5;241m0\u001b[39m], ABCSeries):\n\u001b[0;32m   1512\u001b[0m     \u001b[38;5;66;03m# GH#43986 Need to do list(mapped) in order to get treated as nested\u001b[39;00m\n\u001b[0;32m   1513\u001b[0m     \u001b[38;5;66;03m#  See also GH#25959 regarding EA support\u001b[39;00m\n\u001b[0;32m   1514\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m obj\u001b[38;5;241m.\u001b[39m_constructor_expanddim(\u001b[38;5;28mlist\u001b[39m(mapped), index\u001b[38;5;241m=\u001b[39mobj\u001b[38;5;241m.\u001b[39mindex)\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\pandas\\core\\base.py:921\u001b[0m, in \u001b[0;36mIndexOpsMixin._map_values\u001b[1;34m(self, mapper, na_action, convert)\u001b[0m\n\u001b[0;32m    918\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(arr, ExtensionArray):\n\u001b[0;32m    919\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m arr\u001b[38;5;241m.\u001b[39mmap(mapper, na_action\u001b[38;5;241m=\u001b[39mna_action)\n\u001b[1;32m--> 921\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[43malgorithms\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mmap_array\u001b[49m\u001b[43m(\u001b[49m\u001b[43marr\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mmapper\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mna_action\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mna_action\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mconvert\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mconvert\u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[1;32m~\\anaconda3\\Lib\\site-packages\\pandas\\core\\algorithms.py:1743\u001b[0m, in \u001b[0;36mmap_array\u001b[1;34m(arr, mapper, na_action, convert)\u001b[0m\n\u001b[0;32m   1741\u001b[0m values \u001b[38;5;241m=\u001b[39m arr\u001b[38;5;241m.\u001b[39mastype(\u001b[38;5;28mobject\u001b[39m, copy\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mFalse\u001b[39;00m)\n\u001b[0;32m   1742\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m na_action \u001b[38;5;129;01mis\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m:\n\u001b[1;32m-> 1743\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[43mlib\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mmap_infer\u001b[49m\u001b[43m(\u001b[49m\u001b[43mvalues\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mmapper\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mconvert\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mconvert\u001b[49m\u001b[43m)\u001b[49m\n\u001b[0;32m   1744\u001b[0m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[0;32m   1745\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m lib\u001b[38;5;241m.\u001b[39mmap_infer_mask(\n\u001b[0;32m   1746\u001b[0m         values, mapper, mask\u001b[38;5;241m=\u001b[39misna(values)\u001b[38;5;241m.\u001b[39mview(np\u001b[38;5;241m.\u001b[39muint8), convert\u001b[38;5;241m=\u001b[39mconvert\n\u001b[0;32m   1747\u001b[0m     )\n",
+      "File \u001b[1;32mlib.pyx:2972\u001b[0m, in \u001b[0;36mpandas._libs.lib.map_infer\u001b[1;34m()\u001b[0m\n",
+      "Cell \u001b[1;32mIn[13], line 1\u001b[0m, in \u001b[0;36m<lambda>\u001b[1;34m(x)\u001b[0m\n\u001b[1;32m----> 1\u001b[0m data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m] \u001b[38;5;241m=\u001b[39m data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m]\u001b[38;5;241m.\u001b[39mapply(\u001b[38;5;28;01mlambda\u001b[39;00m x: \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m \u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;241m.\u001b[39mjoin(x\u001b[38;5;241m.\u001b[39mlower() \u001b[38;5;28;01mfor\u001b[39;00m x \u001b[38;5;129;01min\u001b[39;00m \u001b[43mx\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43msplit\u001b[49m()))\n",
+      "\u001b[1;31mAttributeError\u001b[0m: 'float' object has no attribute 'split'"
+     ]
+    }
+   ],
+   "source": [
+    "data['content'] = data['content'].apply(lambda x: \" \".join(x.lower() for x in x.split()))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "c6788484-9083-4f2a-b6cf-8dbc53c85c92",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "[nltk_data] Downloading package stopwords to\n",
+      "[nltk_data]     C:\\Users\\91800\\AppData\\Roaming\\nltk_data...\n",
+      "[nltk_data]   Package stopwords is already up-to-date!\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import nltk\n",
+    "nltk.download('stopwords')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "65c3c6c9-32c4-443e-ae9f-c2dbc1e1ea3f",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "SyntaxError",
+     "evalue": "invalid non-printable character U+00A0 (2109006628.py, line 3)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;36m  Cell \u001b[1;32mIn[23], line 3\u001b[1;36m\u001b[0m\n\u001b[1;33m    data['content']=data['content'].apply(lambda x:\" \".join(x for x in x.split() if x not in stop))\u001b[0m\n\u001b[1;37m                                                                                   ^\u001b[0m\n\u001b[1;31mSyntaxError\u001b[0m\u001b[1;31m:\u001b[0m invalid non-printable character U+00A0\n"
+     ]
+    }
+   ],
+   "source": [
+    "from nltk.corpus import stopwords\n",
+    "stop=stopwords.words('english')\n",
+    "data['content']=data['content'].apply(lambda x:\" \".join(x for x in x.split() if x not in stop))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "35948e8a-031b-42f4-9851-0d8db16d3aaa",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ModuleNotFoundError",
+     "evalue": "No module named 'textblob'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mModuleNotFoundError\u001b[0m                       Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[24], line 2\u001b[0m\n\u001b[0;32m      1\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnltk\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mstem\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m WordNetLemmatizer\n\u001b[1;32m----> 2\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mtextblob\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m Word\n\u001b[0;32m      3\u001b[0m data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m]\u001b[38;5;241m=\u001b[39mdata[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m]\u001b[38;5;241m.\u001b[39mapply(\u001b[38;5;28;01mlambda\u001b[39;00m x: \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m \u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;241m.\u001b[39mjoin([Word(word)\u001b[38;5;241m.\u001b[39mlemmatize() \u001b[38;5;28;01mfor\u001b[39;00m word \u001b[38;5;129;01min\u001b[39;00m x\u001b[38;5;241m.\u001b[39msplit()]))\n\u001b[0;32m      4\u001b[0m data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m]\u001b[38;5;241m.\u001b[39mhead()\n",
+      "\u001b[1;31mModuleNotFoundError\u001b[0m: No module named 'textblob'"
+     ]
+    }
+   ],
+   "source": [
+    "from nltk.stem import WordNetLemmatizer\n",
+    "from textblob import Word\n",
+    "data['content']=data['content'].apply(lambda x: \" \".join([Word(word).lemmatize() for word in x.split()]))\n",
+    "data['content'].head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "d655b0c5-a60c-41a4-8877-b1b7183e2492",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X = data[['content']]\n",
+    "y = data['label']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "c54d51c4-ebd4-47f2-8d90-1d4f54a90a94",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "11b50233-bc2f-4a29-a502-c9267048e68f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3, random_state=45, stratify=y)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "84f11d28-fd25-4d85-a883-0e9c2aad3833",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "(14560, 1)\n",
+      "(14560,)\n",
+      "(6240, 1)\n",
+      "(6240, 1)\n"
+     ]
+    }
+   ],
+   "source": [
+    "print (X_train.shape)\n",
+    "print (y_train.shape)\n",
+    "print (X_test.shape)\n",
+    "print (X_test.shape)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1129b490-8ddd-4289-b699-07dfb963af94",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "tfidf_vect = TfidfV"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "601ef540-de67-49be-b74a-8b80ace4f542",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
