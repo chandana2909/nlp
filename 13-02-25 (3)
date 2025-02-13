@@ -1,0 +1,634 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "3ddc1a57-2b54-4b53-af5e-86c0ef31f251",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "27d3228f-22cb-4288-a1af-f526a545d83a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>id</th>\n",
+       "      <th>title</th>\n",
+       "      <th>author</th>\n",
+       "      <th>text</th>\n",
+       "      <th>label</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>House Dem Aide: We Didn’t Even See Comey’s Let...</td>\n",
+       "      <td>Darrell Lucus</td>\n",
+       "      <td>House Dem Aide: We Didn’t Even See Comey’s Let...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>FLYNN: Hillary Clinton, Big Woman on Campus - ...</td>\n",
+       "      <td>Daniel J. Flynn</td>\n",
+       "      <td>Ever get the feeling your life circles the rou...</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2</td>\n",
+       "      <td>Why the Truth Might Get You Fired</td>\n",
+       "      <td>Consortiumnews.com</td>\n",
+       "      <td>Why the Truth Might Get You Fired October 29, ...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>3</td>\n",
+       "      <td>15 Civilians Killed In Single US Airstrike Hav...</td>\n",
+       "      <td>Jessica Purkiss</td>\n",
+       "      <td>Videos 15 Civilians Killed In Single US Airstr...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>4</td>\n",
+       "      <td>Iranian woman jailed for fictional unpublished...</td>\n",
+       "      <td>Howard Portnoy</td>\n",
+       "      <td>Print \\nAn Iranian woman has been sentenced to...</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   id                                              title              author  \\\n",
+       "0   0  House Dem Aide: We Didn’t Even See Comey’s Let...       Darrell Lucus   \n",
+       "1   1  FLYNN: Hillary Clinton, Big Woman on Campus - ...     Daniel J. Flynn   \n",
+       "2   2                  Why the Truth Might Get You Fired  Consortiumnews.com   \n",
+       "3   3  15 Civilians Killed In Single US Airstrike Hav...     Jessica Purkiss   \n",
+       "4   4  Iranian woman jailed for fictional unpublished...      Howard Portnoy   \n",
+       "\n",
+       "                                                text  label  \n",
+       "0  House Dem Aide: We Didn’t Even See Comey’s Let...      1  \n",
+       "1  Ever get the feeling your life circles the rou...      0  \n",
+       "2  Why the Truth Might Get You Fired October 29, ...      1  \n",
+       "3  Videos 15 Civilians Killed In Single US Airstr...      1  \n",
+       "4  Print \\nAn Iranian woman has been sentenced to...      1  "
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data=pd.read_csv(r\"C:\\Users\\91800\\Downloads\\fake_news.csv\")\n",
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "747e71fa-1c63-4f1c-b8b6-2aea215f1bd0",
+   "metadata": {},
+   "source": [
+    " data.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "5c111628-08a7-4634-9bab-138544a1a86e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 20800 entries, 0 to 20799\n",
+      "Data columns (total 5 columns):\n",
+      " #   Column  Non-Null Count  Dtype \n",
+      "---  ------  --------------  ----- \n",
+      " 0   id      20800 non-null  int64 \n",
+      " 1   title   20242 non-null  object\n",
+      " 2   author  18843 non-null  object\n",
+      " 3   text    20761 non-null  object\n",
+      " 4   label   20800 non-null  int64 \n",
+      "dtypes: int64(2), object(3)\n",
+      "memory usage: 812.6+ KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "data.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "c8314881-6049-4053-8ede-034f04c0bd2a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "id           0\n",
+       "title      558\n",
+       "author    1957\n",
+       "text        39\n",
+       "label        0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.isna().sum()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "6d652618-ca97-49b2-9f44-3fab6a5b70e6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data=data.drop(['id'],axis=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "d1ac6ef8-3af5-4a78-8e89-fe592fe3cdfa",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data=data.fillna('')\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "44b0e962-36b9-483b-b487-3571c2aa58a9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['content']=data['author']+''+data['title']+''+data['text']\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "d1931db8-4a28-46b3-9e2a-8e8bcfdf3eef",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data=data.drop(['title','author','text'],axis=1)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "4363cbb8-7100-46a6-9573-7e010bd420cc",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>label</th>\n",
+       "      <th>content</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Darrell LucusHouse Dem Aide: We Didn’t Even Se...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>0</td>\n",
+       "      <td>Daniel J. FlynnFLYNN: Hillary Clinton, Big Wom...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Consortiumnews.comWhy the Truth Might Get You ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Jessica Purkiss15 Civilians Killed In Single U...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Howard PortnoyIranian woman jailed for fiction...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   label                                            content\n",
+       "0      1  Darrell LucusHouse Dem Aide: We Didn’t Even Se...\n",
+       "1      0  Daniel J. FlynnFLYNN: Hillary Clinton, Big Wom...\n",
+       "2      1  Consortiumnews.comWhy the Truth Might Get You ...\n",
+       "3      1  Jessica Purkiss15 Civilians Killed In Single U...\n",
+       "4      1  Howard PortnoyIranian woman jailed for fiction..."
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "06908b84-385e-4749-b8ab-f4434ee7559c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['content']=data['content'].apply(lambda x: \" \".join(x.lower() for x in  x.split()))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "2eb6683b-6891-4657-896f-a5ffd6adb4db",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "<>:1: SyntaxWarning: invalid escape sequence '\\w'\n",
+      "<>:1: SyntaxWarning: invalid escape sequence '\\w'\n",
+      "C:\\Users\\91800\\AppData\\Local\\Temp\\ipykernel_15728\\2466547887.py:1: SyntaxWarning: invalid escape sequence '\\w'\n",
+      "  data['content']=data['content'].str.replace('[^\\w\\s]','')\n"
+     ]
+    }
+   ],
+   "source": [
+    "data['content']=data['content'].str.replace('[^\\w\\s]','')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "e0ca387d-11f9-4a8b-b2f1-7c0a4d385275",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "[nltk_data] Downloading package stopwords to\n",
+      "[nltk_data]     C:\\Users\\91800\\AppData\\Roaming\\nltk_data...\n",
+      "[nltk_data]   Package stopwords is already up-to-date!\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import nltk\n",
+    "nltk.download('stopwords')\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "933b876b-58df-4653-873c-d8e2fc8561cb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from nltk.corpus import stopwords\n",
+    "stop=stopwords.words('english')\n",
+    "data['content']=data['content'].apply(lambda x:\" \".join(x for x in x.split() if x not in stop))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3b156a63-544e-47f0-ba25-cfc415c91f06",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from nltk.stem import WordNetLemmatizer\n",
+    "from textblob import Word\n",
+    "data['content']=data['content'].apply(lambda x: \" \".join([Word(word).lemmatize() for word in x.split()]))\n",
+    "data['content'].head()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "52533241-7b34-43db-b8e0-f61400e94a78",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X=data[['content']]\n",
+    "y=data['label']\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "f491d50c-9c3b-4bce-8182-93b7d45e4c7b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0feeaa4a-e29f-4f6a-baa3-ae63b5833c7d",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "794bb554-cc0e-4434-921a-2594f029ac99",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=45,stratify=y)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "dd367aea-d23e-4f57-96d0-f22a55b5c949",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "(14560, 1)\n",
+      "(14560,)\n",
+      "(6240, 1)\n",
+      "(6240,)\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(X_train.shape)\n",
+    "print(y_train.shape)\n",
+    "print(X_test.shape)\n",
+    "print(y_test.shape)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "4abefe1b-0b6d-473d-a6fc-9b07ac3cbdd6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.feature_extraction.text import TfidfVectorizer\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "id": "182f883c-dd2d-4820-8e9b-274855ae8940",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'tfidf_vec' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[39], line 4\u001b[0m\n\u001b[0;32m      2\u001b[0m tfidf_vect\u001b[38;5;241m.\u001b[39mfit(data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m])\n\u001b[0;32m      3\u001b[0m xtrain_tfidf\u001b[38;5;241m=\u001b[39mtfidf_vect\u001b[38;5;241m.\u001b[39mtransform(X_train[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m])\n\u001b[1;32m----> 4\u001b[0m xtest_tfidf\u001b[38;5;241m=\u001b[39m\u001b[43mtfidf_vec\u001b[49m\u001b[38;5;241m.\u001b[39mtransform(X_test[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mcontent\u001b[39m\u001b[38;5;124m'\u001b[39m])\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'tfidf_vec' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "tfidf_vect=TfidfVectorizer(analyzer='word',token_pattern=r'\\w{1,}',max_features=5000)\n",
+    "tfidf_vect.fit(data['content'])\n",
+    "xtrain_tfidf=tfidf_vect.transform(X_train['content'])\n",
+    "xtest_tfidf=tfidf_vec.transform(X_test['content'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "id": "0c8ec93d-a9a0-4f85-bef1-0079d19d6344",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'xtest_tfidf' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[40], line 5\u001b[0m\n\u001b[0;32m      3\u001b[0m pclf \u001b[38;5;241m=\u001b[39m PassiveAggressiveClassifier()\n\u001b[0;32m      4\u001b[0m pclf\u001b[38;5;241m.\u001b[39mfit(xtrain_tfidf, y_train)\n\u001b[1;32m----> 5\u001b[0m predictions \u001b[38;5;241m=\u001b[39m pclf\u001b[38;5;241m.\u001b[39mpredict(\u001b[43mxtest_tfidf\u001b[49m)\n\u001b[0;32m      6\u001b[0m \u001b[38;5;28mprint\u001b[39m(metrics\u001b[38;5;241m.\u001b[39mclassification_report(y_test, predictions))\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'xtest_tfidf' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "from sklearn.linear_model import PassiveAggressiveClassifier\n",
+    "from sklearn import metrics\n",
+    "pclf = PassiveAggressiveClassifier()\n",
+    "pclf.fit(xtrain_tfidf, y_train)\n",
+    "predictions = pclf.predict(xtest_tfidf)\n",
+    "print(metrics.classification_report(y_test, predictions))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "id": "2cd86179-3450-4f81-840c-afc0be6bcb26",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "id": "79b3da28-b0d0-4b5f-ae01-e23635dd9040",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=45,stratify=y)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "id": "0642323f-dba4-48b3-84b2-657b7e9e74e6",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'predictions' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[43], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m \u001b[38;5;28mprint\u001b[39m(metrics\u001b[38;5;241m.\u001b[39mconfusion_matrix(y_test,\u001b[43mpredictions\u001b[49m))\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'predictions' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "print(metrics.confusion_matrix(y_test,predictions))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "id": "19500699-fa82-47d6-82c3-b4b083c4215c",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'xtest_tfidf' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[45], line 4\u001b[0m\n\u001b[0;32m      2\u001b[0m mlpclf\u001b[38;5;241m=\u001b[39mMLPClassifier(hidden_layer_sizes\u001b[38;5;241m=\u001b[39m(\u001b[38;5;241m256\u001b[39m,\u001b[38;5;241m64\u001b[39m,\u001b[38;5;241m16\u001b[39m),activation\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mrelu\u001b[39m\u001b[38;5;124m'\u001b[39m,solver\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124madam\u001b[39m\u001b[38;5;124m'\u001b[39m)\n\u001b[0;32m      3\u001b[0m mlpclf\u001b[38;5;241m.\u001b[39mfit(xtrain_tfidf,y_train)\n\u001b[1;32m----> 4\u001b[0m predictions\u001b[38;5;241m=\u001b[39mmlpclf\u001b[38;5;241m.\u001b[39mpredict(\u001b[43mxtest_tfidf\u001b[49m)\n\u001b[0;32m      5\u001b[0m \u001b[38;5;28mprint\u001b[39m(metrics\u001b[38;5;241m.\u001b[39mclassification_report(y_test,predictions))\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'xtest_tfidf' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "from sklearn.neural_network import MLPClassifier\n",
+    "mlpclf=MLPClassifier(hidden_layer_sizes=(256,64,16),activation='relu',solver='adam')\n",
+    "mlpclf.fit(xtrain_tfidf,y_train)\n",
+    "predictions=mlpclf.predict(xtest_tfidf)\n",
+    "print(metrics.classification_report(y_test,predictions))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "92d4f795-36b5-4e21-ae3c-f629c3b6de5c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(metrics.confusion_matrix(y_test,predictions))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b09edcd0-015f-4e8f-9349-5d9667eff349",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pickle\n",
+    "pickle.dump(mlpclf,open(\"fakenews1.pk1\",\"wb\"))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9bd8f9dd-7b85-4c93-ab27-6c53e5e020aa",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
